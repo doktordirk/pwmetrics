@@ -25,7 +25,9 @@ export class LHRunner {
   async run(): Promise<LH.RunnerResult> {
     try {
       let lhResults: LH.RunnerResult;
-      await this.launchChrome();
+      if (this.flags.launchChrome) {
+        await this.launchChrome();
+      }
 
       if (process.env.CI) {
         // handling CRI_TIMEOUT issue - https://github.com/GoogleChrome/lighthouse/issues/833

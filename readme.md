@@ -122,6 +122,7 @@ module.exports = {
     expectations: true, // turn on assertion metrics results against provides values
     json: true, // not required, set to true if you want json output
     outputPath: 'stdout', // not required, only needed if you have specified json output, can be "stdout" or a path
+    launchChrome: false, // don't launch chrome. Useful when puppeteer is used to login
     chromePath: '/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary', //optional path to specific Chrome location
     chromeFlags: '', // custom flags to pass to Chrome. For a full list of flags, see http://peter.sh/experiments/chromium-command-line-switches/.
     // Note: pwmetrics supports all flags from Lighthouse

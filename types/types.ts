@@ -25,6 +25,7 @@ export interface FeatureFlags {
   view: Boolean;
   expectations: Boolean;
   json: Boolean;
+  launchChrome: Boolean,
   chromeFlags: string;
   chromePath?: string;
   port?: number;

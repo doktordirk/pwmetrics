@@ -46,6 +46,7 @@ class PWMetrics {
     view: false,
     expectations: false,
     json: false,
+    launchChrome: true,
     chromeFlags: '',
     showOutput: true,
     failOnError: false,
