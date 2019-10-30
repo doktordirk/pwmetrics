@@ -42,7 +42,7 @@ export class LHRunner {
           });
         });
       } else {
-        lhResults = await lighthouse(this.url, this.flags, perfConfig);
+        lhResults = await lighthouse(this.url, this.flags, this.flags.config || perfConfig);
       }
 
       await this.killLauncher();

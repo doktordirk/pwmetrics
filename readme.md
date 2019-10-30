@@ -111,6 +111,7 @@ module.exports = {
 
 ```js
 const METRICS = require('pwmetrics/lib/metrics');
+const lhConfig = require('./lr-desktop-config'); // config file for lighthouse
 
 module.exports = {
   url: 'http://example.com/',
@@ -125,6 +126,7 @@ module.exports = {
     launchChrome: false, // don't launch chrome. Useful when puppeteer is used to login
     chromePath: '/Applications/Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary', //optional path to specific Chrome location
     chromeFlags: '', // custom flags to pass to Chrome. For a full list of flags, see http://peter.sh/experiments/chromium-command-line-switches/.
+    config: lhConfig, // replaces /lib/perf-config with the selected config for lighthouse
     // Note: pwmetrics supports all flags from Lighthouse
     showOutput: true, // not required, set to false for pwmetrics not output any console.log messages
     failOnError: false // not required, set to true if you want to fail the process on expectations errors

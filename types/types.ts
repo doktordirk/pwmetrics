@@ -27,6 +27,7 @@ export interface FeatureFlags {
   json: Boolean;
   launchChrome: Boolean,
   chromeFlags: string;
+  config?: LH.SharedFlagsSettings,
   chromePath?: string;
   port?: number;
   showOutput: Boolean;
