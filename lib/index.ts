@@ -19,8 +19,9 @@ import {LHRunner} from './lh-runner';
 import {Sheets} from './sheets';
 import {adaptMetricsData} from './metrics/metrics-adapter';
 import {validateMetrics, normalizeExpectationMetrics, checkExpectations} from './expectations';
+import {getTestSuite} from './junitReport';
 import {upload} from './upload';
-import {writeToDisk} from './utils/fs';
+import {writeToDisk, mkdir} from './utils/fs';
 import {getMessage, getMessageWithPrefix} from './utils/messages';
 import {drawChart} from './chart/chart';
 
@@ -52,6 +53,7 @@ class PWMetrics {
     failOnError: false,
     outputPath: 'stdout',
   };
+  testName: string;
   runs: number;
   sheets: SheetsConfig;
   normalizedExpectations: NormalizedExpectationMetrics;
@@ -60,6 +62,7 @@ class PWMetrics {
 
   constructor(public url: string, opts: MainOptions) {
     this.flags = Object.assign({}, this.flags, opts.flags);
+    this.testName = opts.testName || 'pwmetrics';
     this.runs = this.flags.runs;
     this.sheets = opts.sheets;
     this.clientSecret = opts.clientSecret;
@@ -84,6 +87,7 @@ class PWMetrics {
     const runs = Array.apply(null, {length: +this.runs}).map(Number.call, Number);
     let metricsResults: MetricsResults[] = [];
 
+    const startTime = Date.now();
     for (let runIndex of runs) {
       try {
         const lhRunner = new LHRunner(this.url, this.flags);
@@ -95,8 +99,10 @@ class PWMetrics {
         this.logger.error(getMessageWithPrefix('ERROR', 'FAILED_RUN', runIndex, runs.length, error.message));
       }
     }
+    const testDuration = Date.now() - startTime;
 
     const results: PWMetricsResults = {runs: metricsResults.filter(r => !(r instanceof Error))};
+
     if (this.runs > 1 && !this.flags.submit) {
       results.median = this.findMedianRun(results.runs);
       this.logger.log(getMessage('MEDIAN_RUN'));
@@ -119,6 +125,17 @@ class PWMetrics {
       const resultsToCompare = this.runs > 1 ? results.median.timings : results.runs[0].timings;
       const hasExpectationsWarnings = this.resultHasExpectationIssues(resultsToCompare, 'warn');
       const hasExpectationsErrors = this.resultHasExpectationIssues(resultsToCompare, 'error');
+
+
+      if (this.flags.junitReporterOutputPath) {
+        const testsuiteXML = getTestSuite(this.testName, this.url, testDuration, resultsToCompare, this.normalizedExpectations);
+        const filePath = path.join(this.flags.junitReporterOutputPath, `${this.testName}.xml`);
+
+        await mkdir(this.flags.junitReporterOutputPath);
+        await writeToDisk(filePath, testsuiteXML);
+
+        this.logger.log(getMessageWithPrefix('SUCCESS', 'SAVED_TO_XML', filePath));
+      }
 
       if (hasExpectationsWarnings || hasExpectationsErrors) {
         checkExpectations(resultsToCompare, this.normalizedExpectations);

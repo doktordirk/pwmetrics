@@ -12,6 +12,7 @@ export interface SheetsConfig {
 }
 
 export interface MainOptions {
+  testName?: string,
   flags?: Partial<FeatureFlags>;
   sheets?: SheetsConfig;
   expectations?: ExpectationMetrics;
@@ -33,6 +34,7 @@ export interface FeatureFlags {
   showOutput: Boolean;
   failOnError: Boolean;
   outputPath: string;
+  junitReporterOutputPath?: string;
 }
 
 export interface MetricsResults {

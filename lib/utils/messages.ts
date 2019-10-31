@@ -38,6 +38,8 @@ export const getMessage = function (messageType: string, ...args: any[]) {
       return '        ☆  Median run  ☆';
     case 'SAVED_TO_JSON':
       return `Data was saved into file ${args[0]}`;
+    case 'SAVED_TO_XML':
+      return `JUnit report was saved into file ${args[0]}`;
     case 'NO_METRICS':
       return 'No expectation metrics were found';
     case 'NO_EXPECTATION_ERROR':
@@ -99,6 +101,13 @@ export const getAssertionMessage = function (assertionLevel: string,
   const expectedStr = boldify(`${expectedValue} ms`);
   const actualStr = boldify(colorizer(`${actualValue} ms`));
   return `${message} Expected ${expectedStr}, but found ${actualStr}.`;
+};
+
+export const getJUnitAssertionMessage = function (assertionLevel: string,
+                                                  messageType: string,
+                                                  expectedValue: number,
+                                                  actualValue: number) {
+  return `${messageType}: Expected ${expectedValue}, ${assertionLevel !== 'SUCCESS' ? 'but ' : ''} found ${actualValue} ms.`;
 };
 
 export const getMessageWithPrefix = function (assertionLevel: string,
