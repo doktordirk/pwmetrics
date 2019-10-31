@@ -4,6 +4,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as promisify from 'micro-promisify';
+import * as mkdirp from 'mkdirp';
 
 import {getMessageWithPrefix} from './messages';
 import {Logger} from './logger';
@@ -42,3 +43,15 @@ export function writeToDisk(fileName: string, data: string) {
     resolve();
   });
 }
+
+export function mkdir(path: string) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await promisify(mkdirp)(path);
+    } catch (err) {
+      reject(err);
+    }
+
+    resolve();
+  });
+};

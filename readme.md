@@ -115,6 +115,7 @@ const lhConfig = require('./lr-desktop-config'); // config file for lighthouse
 
 module.exports = {
   url: 'http://example.com/',
+  testName: 'homepage test', // not required, name of the test suite
   flags: { // AKA feature flags
     runs: 3, // number or runs
     submit: true, // turn on submitting to Google Sheets
@@ -129,7 +130,8 @@ module.exports = {
     config: lhConfig, // replaces /lib/perf-config with the selected config for lighthouse
     // Note: pwmetrics supports all flags from Lighthouse
     showOutput: true, // not required, set to false for pwmetrics not output any console.log messages
-    failOnError: false // not required, set to true if you want to fail the process on expectations errors
+    failOnError: false, // not required, set to true if you want to fail the process on expectations errors
+    junitReporterOutputPath: '/reports', // not required, set a directory if you want a junit report of the expectations
   },
   expectations: {
     // these expectations values are examples, for your cases set your own
