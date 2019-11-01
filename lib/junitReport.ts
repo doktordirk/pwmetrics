@@ -14,7 +14,7 @@ export const getTestSuite = (testName: string, url: string, testDuration: number
     if (!expectationValue) return;
 
     testCount += 1;
-    const testDesc = `Time till ${metricName} should stay bellow ${expectationValue.warn} ms`
+    const testDesc = `Time till ${metricName} should stay bellow ${expectationValue.error} ms`
     let type: 'ERROR' | 'WARNING' | 'SUCCESS';
 
     if (metricValue >= expectationValue.error) {
@@ -22,13 +22,13 @@ export const getTestSuite = (testName: string, url: string, testDuration: number
       failureCount++;
       const msg = getJUnitAssertionMessage(type, metricName, expectationValue.error, metricValue);
       testcaseXMLLines.push(`<testcase name="${testDesc}" classname="${testName}" time="${metricValue / 1000}">`);
-      testcaseXMLLines.push(`<failure message="${msg}" type="${type}">${type} ${msg}</failure>`);
+      testcaseXMLLines.push(`<failure message="${msg}" type="${type}">${type} - ${url}: ${msg}</failure>`);
       testcaseXMLLines.push('</testcase>');
     } else if (metricValue >= expectationValue.warn && metricValue < expectationValue.error) {
       type = 'WARNING';
       const msg = getJUnitAssertionMessage(type, metricName, expectationValue.warn, metricValue);
       testcaseXMLLines.push(`<testcase name="${testDesc}" classname="${testName}" time="${metricValue / 1000}">`);
-      testcaseXMLLines.push(`<failure message="${msg}" type="${type}">${type} ${msg}</failure>`);
+      testcaseXMLLines.push(`<failure message="${msg}" type="${type}">${type}- ${url}: ${msg}</failure>`);
       testcaseXMLLines.push('</testcase>');
     } else {
       testcaseXMLLines.push(`<testcase name="${testDesc}" classname="${testName}" time="${metricValue / 1000}"/>`);
