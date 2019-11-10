@@ -62,7 +62,7 @@ export class LHRunner {
 
   async runLighthouseOnCI(): Promise<LH.RunnerResult> {
     try {
-      return await lighthouse(this.url, this.flags, perfConfig);
+      return await lighthouse(this.url, this.flags, this.flags.config || perfConfig);
     } catch (error) {
       if (error.code === 'CRI_TIMEOUT' && this.tryLighthouseCounter <= MAX_LIGHTHOUSE_TRIES) {
         return await this.retryLighthouseOnCI();
