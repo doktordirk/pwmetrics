@@ -24,6 +24,7 @@ import {upload} from './upload';
 import {writeToDisk, mkdir} from './utils/fs';
 import {getMessage, getMessageWithPrefix} from './utils/messages';
 import {drawChart} from './chart/chart';
+const {prepareAssets} = require('lighthouse/lighthouse-core/lib/asset-saver');
 
 import {
   MainOptions,
@@ -92,6 +93,19 @@ class PWMetrics {
       try {
         const lhRunner = new LHRunner(this.url, this.flags);
         const lhTrace = await lhRunner.run();
+        const filePath = (ext) => path.join(this.flags.junitReporterOutputPath, `${this.testName}.${ext}`);
+        const report = Array.isArray(lhTrace.report) ? lhTrace.report[0] : lhTrace.report;
+
+        await mkdir(this.flags.junitReporterOutputPath);
+        await writeToDisk(filePath('html'), report);
+
+        const assets = await prepareAssets(lhTrace.artifacts);
+        const trace = assets.map(data => {
+          return data.traceData;
+        });
+
+        await writeToDisk(filePath('json'), JSON.stringify(trace[0]));
+
         metricsResults[runIndex] = await this.recordLighthouseTrace(lhTrace);
         this.logger.log(getMessageWithPrefix('SUCCESS', 'SUCCESS_RUN', runIndex, runs.length));
       } catch (error) {
