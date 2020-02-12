@@ -65,7 +65,8 @@ class PWMetrics {
     this.flags = Object.assign({}, this.flags, opts.flags);
     this.testName = opts.testName || 'pwmetrics';
     this.runs = this.flags.runs;
-    this.sheets = opts.sheets;
+    this.sheets = {...opts.sheets};
+    this.sheets.options.tableName = opts.testName;
     this.clientSecret = opts.clientSecret;
     const expectations: ExpectationMetrics = opts.expectations;
 
