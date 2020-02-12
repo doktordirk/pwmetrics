@@ -48,19 +48,20 @@ export class Sheets {
   async appendResultsToGSheets(results: Array<MetricsResults>) {
     let valuesToAppend: Array<GSheetsValuesToAppend> = [];
     results.forEach(data => {
-      const getTiming = (key: string) => data.timings.find(t => t.id === key).timing;
-      const dateObj = new Date(data.generatedTime);
-      // order matters
-      valuesToAppend.push([
-        data.lighthouseVersion,
-        data.requestedUrl,
-        `${dateObj.toLocaleDateString()} ${dateObj.toLocaleTimeString()}`,
-        getTiming(METRICS.TTFCP),
-        getTiming(METRICS.TTFMP),
-        getTiming(METRICS.SI),
-        getTiming(METRICS.TTFCPUIDLE),
-        getTiming(METRICS.TTI),
-      ]);
+        const getTiming = (key) => {
+          const resultSet = data.timings.find(t => t.id === key);
+          return resultSet.timing.numericValue;
+        }
+        const dateObj = new Date(data.generatedTime);
+        // order matters
+        valuesToAppend.push([
+            process.env.USER,
+            data.lighthouseVersion,
+            data.requestedUrl,
+            `${dateObj.toLocaleDateString()} ${dateObj.toLocaleTimeString()}`,
+            ...data.scores,
+            ...Object.values(METRICS).map(key => getTiming(key))
+        ]);
     });
 
     try {

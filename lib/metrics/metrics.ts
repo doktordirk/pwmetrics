@@ -2,11 +2,19 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE
 
 export const METRICS = {
-  TTFCP: 'firstContentfulPaint',
-  TTFMP: 'firstMeaningfulPaint',
-  TTFCPUIDLE: 'firstCPUIdle',
-  TTI: 'interactive',
-  SI: 'speedIndex',
-  // @todo add in further improvements
-  // VISUALLY_COMPLETE: 'observedLastVisualChange',
+    BT: 'bootup-time',
+    TTFCP: 'first-contentful-paint',
+    TTFMP: 'first-meaningful-paint',
+    TTFCPUIDLE: 'first-cpu-idle',
+    TTI: 'interactive',
+    SI: 'speed-index',
+    MPFID: 'max-potential-fid',
+    TTFB: 'time-to-first-byte',
+    TBT: 'total-blocking-time',
+    EIL: 'estimated-input-latency',
+    LFEFP: 'load-fast-enough-for-pwa',
+    DS: 'dom-size',
+    TBW: 'total-byte-weight',
+    MWB: 'mainthread-work-breakdown',
+    NSL: 'network-server-latency',
 };

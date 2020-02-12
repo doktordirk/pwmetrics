@@ -31,7 +31,7 @@ export const adaptMetricsData = (res: LH.Result): MetricsResults => {
   if (!metricsAudit || !metricsAudit.details || !metricsAudit.details.items)
     throw new Error('No metrics data');
 
-  const metricsValues = metricsAudit.details.items[0];
+  const metricsValues = auditResults;
 
   checkMetrics(metricsAudit);
 
@@ -68,6 +68,9 @@ export const adaptMetricsData = (res: LH.Result): MetricsResults => {
   });
 
   return {
+    scores: Object.values(res.categories).map(value => {
+      return value.score;
+    }),
     timings,
     generatedTime: res.fetchTime,
     lighthouseVersion: res.lighthouseVersion,

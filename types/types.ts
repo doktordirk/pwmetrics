@@ -38,6 +38,7 @@ export interface FeatureFlags {
 }
 
 export interface MetricsResults {
+  scores: number[],
   timings: Timing[];
   generatedTime: string;
   lighthouseVersion: string;
@@ -53,7 +54,7 @@ export interface PWMetricsResults {
 export interface Timing {
   title: string;
   id: string;
-  timing: number;
+  timing: LH.Audit.Result;
   color: string;
 }
 
@@ -72,14 +73,7 @@ export interface Oauth2Client {
 }
 
 export interface GSheetsValuesToAppend {
-  0: string; // lighthouseVersion
-  1: string; // url
-  2: string; // time
-  3: number; // TTFCP timing
-  4: number; // TTFMP timing
-  5: number; // SI timing
-  6: number; // TTFCPUIDLE timing
-  7: number; // TTI timing
+  [index: number]: string | number;
 }
 
 export interface GSheetsAppendResultsOptions {
