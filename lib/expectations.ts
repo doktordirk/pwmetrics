@@ -43,11 +43,11 @@ export const checkExpectations = (metricsData: Timing[], expectationMetrics: Nor
 
     if (!expectationValue) return;
 
-    if (metricValue >= expectationValue.error) {
-      msg = getAssertionMessage('ERROR', metricName, expectationValue.error, metricValue);
-    } else if (metricValue >= expectationValue.warn && metricValue < expectationValue.error) {
-      msg = getAssertionMessage('WARNING', metricName, expectationValue.warn, metricValue);
-    }
+    // if (metricValue >= expectationValue.error) {
+    //   msg = getAssertionMessage('ERROR', metricName, expectationValue.error, metricValue);
+    // } else if (metricValue >= expectationValue.warn && metricValue < expectationValue.error) {
+    //   msg = getAssertionMessage('WARNING', metricName, expectationValue.warn, metricValue);
+    // }
 
     if (msg) {
       logger.log(msg);

@@ -119,15 +119,15 @@ class PWMetrics {
     const results: PWMetricsResults = {runs: metricsResults.filter(r => !(r instanceof Error))};
 
     if (this.runs > 1 && !this.flags.submit) {
-      results.median = this.findMedianRun(results.runs);
-      this.logger.log(getMessage('MEDIAN_RUN'));
-      this.displayOutput(results.median);
+      // results.median = this.findMedianRun(results.runs);
+      // this.logger.log(getMessage('MEDIAN_RUN'));
+      // this.displayOutput(results.median);
     } else if (this.flags.submit) {
       const sheets = new Sheets(this.sheets, this.clientSecret);
 
       if (this.sheets.options.uploadMedian) {
-        results.median = this.findMedianRun(results.runs);
-        await sheets.appendResults([results.median]);
+        // results.median = this.findMedianRun(results.runs);
+        // await sheets.appendResults([results.median]);
       }
       else {
         await sheets.appendResults(results.runs);
@@ -168,14 +168,16 @@ class PWMetrics {
   }
 
   resultHasExpectationIssues(timings: Timing[], issueType: 'warn' | 'error'): boolean {
-    return timings.some((timing: Timing) => {
-      const expectation = this.normalizedExpectations[timing.id];
-      if (!expectation) {
-        return false;
-      }
-      const expectedLimit = expectation[issueType];
-      return expectedLimit !== undefined && timing.timing >= expectedLimit;
-    });
+    return false;
+
+    // return timings.some((timing: Timing) => {
+    //   const expectation = this.normalizedExpectations[timing.id];
+    //   if (!expectation) {
+    //     return false;
+    //   }
+    //   const expectedLimit = expectation[issueType];
+    //   return expectedLimit !== undefined && timing.timing >= expectedLimit;
+    // });
   }
 
   async recordLighthouseTrace(data: LH.RunnerResult): Promise<MetricsResults> {
@@ -206,46 +208,46 @@ class PWMetrics {
 
   showChart(data: MetricsResults) {
     // reverse to preserve the order, because cli-chart.
-    let timings = data.timings;
+    // let timings = data.timings;
 
-    timings = timings.filter(r => {
-      // filter out metrics that failed to record
-      if (r.timing === undefined || isNaN(r.timing)) {
-        this.logger.error(getMessageWithPrefix('ERROR', 'METRIC_IS_UNAVAILABLE', r.title));
-        return false;
-      } else {
-        return true;
-      }
-    });
+    // timings = timings.filter(r => {
+    //   // filter out metrics that failed to record
+    //   if (r.timing === undefined || isNaN(r.timing)) {
+    //     this.logger.error(getMessageWithPrefix('ERROR', 'METRIC_IS_UNAVAILABLE', r.title));
+    //     return false;
+    //   } else {
+    //     return true;
+    //   }
+    // });
 
-    const fullWidthInMs = Math.max(...timings.map(result => result.timing));
-    const maxLabelWidth = Math.max(...timings.map(result => result.title.length));
-    const terminalWidth = +process.stdout.columns || 90;
+    // const fullWidthInMs = Math.max(...timings.map(result => result.timing));
+    // const maxLabelWidth = Math.max(...timings.map(result => result.title.length));
+    // const terminalWidth = +process.stdout.columns || 90;
 
-    drawChart(timings, {
-      // 90% of terminal width to give some right margin
-      width: terminalWidth * 0.9 - maxLabelWidth,
-      xlabel: 'Time (ms) since navigation start',
+    // drawChart(timings, {
+    //   // 90% of terminal width to give some right margin
+    //   width: terminalWidth * 0.9 - maxLabelWidth,
+    //   xlabel: 'Time (ms) since navigation start',
 
-      xmin: 0,
-      // nearest second
-      xmax: Math.ceil(fullWidthInMs / 1000) * 1000,
-      lmargin: maxLabelWidth + 1,
-    });
+    //   xmin: 0,
+    //   // nearest second
+    //   xmax: Math.ceil(fullWidthInMs / 1000) * 1000,
+    //   lmargin: maxLabelWidth + 1,
+    // });
 
     return data;
   }
 
-  findMedianRun(results: MetricsResults[]): MetricsResults {
-    const TTFCPUIDLEValues = results.map(r => r.timings.find(timing => timing.id === METRICS.TTFCPUIDLE).timing);
-    const medianTTFCPUIDLE = this.median(TTFCPUIDLEValues);
-    // in the case of duplicate runs having the exact same TTFI, we naively pick the first
-    // @fixme, but any for now...
-    return results.find((result: any) => result.timings.find((timing: any) =>
-      timing.id === METRICS.TTFCPUIDLE && timing.timing === medianTTFCPUIDLE
-      )
-    );
-  }
+  // findMedianRun(results: MetricsResults[]): MetricsResults {
+  //   const TTFCPUIDLEValues = results.map(r => r.timings.find(timing => timing.id === METRICS.TTFCPUIDLE).timing);
+  //   const medianTTFCPUIDLE = this.median(TTFCPUIDLEValues);
+  //   // in the case of duplicate runs having the exact same TTFI, we naively pick the first
+  //   // @fixme, but any for now...
+  //   return results.find((result: any) => result.timings.find((timing: any) =>
+  //     timing.id === METRICS.TTFCPUIDLE && timing.timing === medianTTFCPUIDLE
+  //     )
+  //   );
+  // }
 
   median(values: Array<number>) {
     if (values.length === 1) return values[0];
